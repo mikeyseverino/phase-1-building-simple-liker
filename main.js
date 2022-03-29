@@ -3,8 +3,36 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+// document.addEventListener("DOMContentLoaded", () => {
+//   document.querySelector('.like-glyph').addEventListener('click', (e) => {
+//     e.preventDefault()
+//     mimicServerCall()
+//     const articleHearts = document.querySelectorAll(".like-glyph");
+const articleHearts = document.querySelectorAll(".like-glyph");
 
-
+    function likeCallback(e) {
+      const heart = e.target;
+      mimicServerCall("bogusUrl")
+        .then(function(){
+          if ( heart.innerText === EMPTY_HEART) {
+            heart.innerText = FULL_HEART;
+            heart.className = "activated-heart";
+          } else {
+            heart.innerText = EMPTY_HEART;
+            heart.className = "";
+          }
+        })
+        .catch(function(error) {
+          const modal = document.getElementById("modal");
+          modal.className = "";
+          modal.innerText = error;
+          setTimeout(() =>  modal.className = "hidden", 3000);
+        });
+    }
+    
+    for (const glyph of articleHearts) {
+      glyph.addEventListener("click", likeCallback);
+    }
 
 
 //------------------------------------------------------------------------------
@@ -12,6 +40,7 @@ const FULL_HEART = '♥'
 //------------------------------------------------------------------------------
 
 function mimicServerCall(url="http://mimicServer.example.com", config={}) {
+  console.log("Server is working")
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
       let isRandomFailure = Math.random() < .2
@@ -23,3 +52,4 @@ function mimicServerCall(url="http://mimicServer.example.com", config={}) {
     }, 300);
   });
 }
+
